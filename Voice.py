@@ -16,6 +16,8 @@ class Voice(commands.Cog):
         if ctx.voice_client is None:
             if ctx.author.voice:
                 await ctx.author.voice.channel.connect()
+                embed = discord.Embed(title='TTS 연결', description='TTS 사용을 시작합니다.', color=discord.Color.blue())
+                await ctx.send(embed=embed)
             else:
                 embed = discord.Embed(title='오류 발생', description="음성 채널에 들어간 후 명령어를 사용 해 주세요!",
                                       color=discord.Color.red())
@@ -32,6 +34,14 @@ class Voice(commands.Cog):
 
         embed = discord.Embed(title=f"{ctx.author.name}'s Say", description=text, color=discord.Color.orange())
         await ctx.send(embed=embed)
-
+    
+    @commands.command(name="음성종료", description="TTS 사용을 종료합니다.")
+    async def quit_tts(self, ctx):
+        voice = ctx.voice_client
+        if voice.is_connected():
+            await voice.disconnect()
+            embed = discord.Embed(title='TTS 연결 종료', description='TTS 사용을 종료합니다.', color=discord.Color.blue())
+            await ctx.send(embed=embed)
+        
 def setup(client):
     client.add_cog(Voice(client))
